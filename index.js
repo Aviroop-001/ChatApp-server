@@ -8,6 +8,7 @@ const cors = require("cors");
 //Importing Routes
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
+const chatRoute = require("./routes/chats");
 
 // Configuring the backend
 dotenv.config();
@@ -24,9 +25,8 @@ mongoose.connect(process.env.MONGO_URL)
 
 //Routes
 app.use("/api/auth", authRoute);
-// app.use("/api/user", userRoute);
-// app.use("/api/posts", postRoute);
-// app.use("/api/categories", categoriesRoute);
+app.use("/api/users", userRoute);
+app.use("/api/chats", chatRoute);
 
 app.get('/', (req,res)=>{
     try {

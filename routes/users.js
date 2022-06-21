@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const User = require("../models/User");
+const { authorize } = require("../middleware/authMiddleware");
+const { searchUser } = require('../controllers/userControllers');
 
-router.get('/',(req,res)=>{
-    
-})
+
+router.route('/').get(authorize, searchUser);
+
 module.exports = router 
