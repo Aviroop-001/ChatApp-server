@@ -10,16 +10,15 @@ const createChat = async (req,res) =>{
                 { users : { $elemMatch: { $eq: otherUser.id } }}
             ]
     }).populate("users", "-password").populate("latestMessage");
-    console.log("first----", chatExists);
 
-    // chatExists= await User.populate(chatExists, {
-    //     path: "latestMessage.sender",
-    //     select: "username email profilepic"
-    // })
-    // console.log("second----", chatExists);
+    chatExists= await User.populate(chatExists, {
+        path: "latestMessage.sender",
+        select: "username email profilepic"
+    })
 
     if(chatExists.length >0){
         res.status(202).send(chatExists[0]);
+        console.log("Chat revived");
     }
     else{
         try {
@@ -31,7 +30,7 @@ const createChat = async (req,res) =>{
             const newlySavedChat = await newChat.save();
             const populatedSavedChat = await newlySavedChat.populate("users","-password");
             res.status(201).send(populatedSavedChat);
-            console.log("third----", populatedSavedChat);
+            console.log("New chat created");
         } catch (err) {
             res.status(500).send(err);
         }
