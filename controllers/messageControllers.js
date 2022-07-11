@@ -4,9 +4,10 @@ const Message = require("../models/Message");
 
 const fetchMessages = async(req,res) =>{
     try {
-        const allMessages = await Message.find(req.body.chatID).populate('chat').populate('sender',"-password");
+        var allMessages = await Message.find({ chat: req.body.chatID }).populate(['chat', 'sender']);
         res.status(201).json(allMessages);
     } catch (err) {
+        console.log(err);
         res.status(500).json(err);
     }
 }
@@ -25,7 +26,7 @@ const sendNewMessage = async(req,res) =>{
             select: '-password'
         }); //Method to populate a document with the fields to other model references
 
-        // await Chat.findByIdAndUpdate(req.body.chatID , {latestMessage: newlySavedMessage});
+        await Chat.findByIdAndUpdate(req.body.chatID , {latestMessage: newlySavedMessage});
         res.status(201).json(newlySavedMessage);
 
     } catch (err) {
