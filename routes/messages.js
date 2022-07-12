@@ -7,6 +7,6 @@ const { authorize } = require("../middleware/authMiddleware");
 const { fetchMessages, sendNewMessage } = require("../controllers/messageControllers");
 
 router.route('/').post(authorize, sendNewMessage);
-router.route('/').get(authorize, fetchMessages);
+router.route('/:chatID').get(authorize, fetchMessages);
 
 module.exports = router 

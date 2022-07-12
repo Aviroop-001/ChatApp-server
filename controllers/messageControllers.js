@@ -4,7 +4,7 @@ const Message = require("../models/Message");
 
 const fetchMessages = async(req,res) =>{
     try {
-        var allMessages = await Message.find({ chat: req.body.chatID }).populate(['chat', 'sender']);
+        var allMessages = await Message.find({ chat: req.params.chatID }).populate(['chat', 'sender']);
         res.status(201).json(allMessages);
     } catch (err) {
         console.log(err);
