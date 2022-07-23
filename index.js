@@ -37,6 +37,36 @@ app.get('/', (req,res)=>{
         res.status(404).json("Server is DOWN")
     }
 })
-app.listen(process.env.PORT || 8080, () =>{
+
+const server = app.listen(process.env.PORT || 8080, () =>{
     console.log('Backend is up and running...')
 });
+
+const io = require('socket.io')(server,{
+    pingTimeout: 20000,
+    cors:{
+        origin: "http://localhost:3000"
+    },
+});
+io.on("connection", (socket) => {
+    // console.log(socket.id);
+    socket.on("setup", (userData) =>{
+        socket.join(userData._id);
+        socket.emit('connected');
+    });
+    socket.on('join chat', (room) =>{
+        socket.join(room);
+        console.log("Room: "+room);
+    });
+    socket.on('new message', (newMessage) =>{
+        var currentChat = newMessage.chat;
+
+        currentChat.users.forEach(u => {
+            if(newMessage.sender._id === u._id)
+                return;
+                socket.in(u._id).emit('message received', newMessage);
+        });
+    });
+});
+
+
