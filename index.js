@@ -49,14 +49,12 @@ const io = require('socket.io')(server,{
     },
 });
 io.on("connection", (socket) => {
-    // console.log(socket.id);
     socket.on("setup", (userData) =>{
         socket.join(userData._id);
         socket.emit('connected');
     });
     socket.on('join chat', (room) =>{
         socket.join(room);
-        console.log("Room: "+room);
     });
     socket.on('new message', (newMessage) =>{
         var currentChat = newMessage.chat;
