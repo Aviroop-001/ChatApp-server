@@ -45,7 +45,7 @@ const server = app.listen(process.env.PORT || 8080, () =>{
 const io = require('socket.io')(server,{
     pingTimeout: 20000,
     cors:{
-        origin: "http://localhost:3000"
+        origin: "Frontend: https://radius-seven.vercel.app"
     },
 });
 io.on("connection", (socket) => {

@@ -52,5 +52,17 @@ const fetchUserChats = async (req,res) =>{
     }
 }
 
+const deleteChat = async(req,res) =>{
+    try {
+        const toBeDeletedChatID = req.body.ChatID;
+        const deletedChat = await Chat.findOneAndDelete({_id: toBeDeletedChatID});
+        res.status(200).json(deletedChat);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
 
-module.exports = { createChat, fetchUserChats}; 
+}
+
+
+module.exports = { createChat, fetchUserChats, deleteChat}; 
