@@ -1,4 +1,5 @@
 const Chat = require("../models/Chat");
+const Message = require("../models/Message");
 const User = require("../models/User");
 
 const createChat = async (req,res) =>{
@@ -9,7 +10,8 @@ const createChat = async (req,res) =>{
                 { users : { $elemMatch: { $eq: req.user._id } }},
                 { users : { $elemMatch: { $eq: otherUser.id } }}
             ]
-    }).populate("users", "-password").populate("latestMessage");
+    }).populate("users", "-password")
+    .populate("latestMessage");
 
     chatExists= await User.populate(chatExists, {
         path: "latestMessage.sender",
@@ -22,16 +24,18 @@ const createChat = async (req,res) =>{
     }
     else{
         try {
-            let newChat = new Chat({
+            var newChat = {
                 chatName: "ABC",
                 isGroup: false,
                 users: [req.user._id , otherUser.id],
-            });
-            const newlySavedChat = await newChat.save();
+            };
+            console.log(newChat);
+            var newlySavedChat = await Chat.create(newChat);
             const populatedSavedChat = await newlySavedChat.populate("users","-password");
-            res.status(201).send(populatedSavedChat);
+            res.status(200).send(populatedSavedChat);
             console.log("New chat created");
         } catch (err) {
+            console.log(err);
             res.status(500).send(err);
         }
     }
@@ -56,7 +60,8 @@ const deleteChat = async(req,res) =>{
     try {
         const toBeDeletedChatID = req.body.ChatID;
         const deletedChat = await Chat.findOneAndDelete({_id: toBeDeletedChatID});
-        res.status(200).json(deletedChat);
+        const deletedChats = await Message.deleteMany({ _id: toBeDeletedChatID });
+        res.status(200).json(deletedChats);
     } catch (err) {
         console.log(err);
         res.status(500).send(err);
