@@ -8,5 +8,5 @@ const { createChat, fetchUserChats, deleteChat } = require("../controllers/chatC
 //The router.route() function returns an instance of a single route that you can then use to handle HTTP verbs with optional middleware.
 router.route('/').post(authorize, createChat);
 router.route('/').get(authorize, fetchUserChats);
-router.route('/').delete(authorize, deleteChat)
+router.route('/:ChatID').delete(authorize, deleteChat)
 module.exports = router 

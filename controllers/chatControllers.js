@@ -24,13 +24,12 @@ const createChat = async (req,res) =>{
     }
     else{
         try {
-            var newChat = {
+            var newChat = new Chat({
                 chatName: "ABC",
                 isGroup: false,
                 users: [req.user._id , otherUser.id],
-            };
-            console.log(newChat);
-            var newlySavedChat = await Chat.create(newChat);
+            });
+            var newlySavedChat = await newChat.save();
             const populatedSavedChat = await newlySavedChat.populate("users","-password");
             res.status(200).send(populatedSavedChat);
             console.log("New chat created");
@@ -58,9 +57,10 @@ const fetchUserChats = async (req,res) =>{
 
 const deleteChat = async(req,res) =>{
     try {
-        const toBeDeletedChatID = req.body.ChatID;
+        // const toBeDeletedChatID = req.body.ChatID;
+        const toBeDeletedChatID = req.params.ChatID;
         const deletedChat = await Chat.findOneAndDelete({_id: toBeDeletedChatID});
-        const deletedChats = await Message.deleteMany({ _id: toBeDeletedChatID });
+        const deletedChats = await Message.deleteMany({ chat: toBeDeletedChatID });
         res.status(200).json(deletedChats);
     } catch (err) {
         console.log(err);
