@@ -46,7 +46,6 @@ const fetchUserChats = async (req,res) =>{
             { users : { $elemMatch: { $eq: req.user._id } }}
         ).populate("users", "-password")
         .populate("latestMessage")
-        .populate("admin", "-password")
         .sort({updatedAt: -1})
         res.status(202).send(userChats);
     } catch (err) {
