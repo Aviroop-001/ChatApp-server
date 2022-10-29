@@ -5,7 +5,6 @@ const User = require("../models/User");
 const createChat = async (req,res) =>{
     const otherUser = req.body;
     let chatExists = await Chat.find({
-            isGroup: false ,
             $and: [
                 { users : { $elemMatch: { $eq: req.user._id } }},
                 { users : { $elemMatch: { $eq: otherUser.id } }}
